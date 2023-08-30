@@ -394,11 +394,7 @@ class movimiento(QMainWindow, Ui_MainWindow2):
         self.Tabs2.setTabEnabled(1, True)
         self.Tabs2.setTabEnabled(0, False)
         self.Tabs2.setCurrentIndex(1)
-        
-
-
-                      
-                   
+                    
 if __name__ == '__main__':
     # Inicializar la aplicación
     app = QApplication([])
@@ -406,7 +402,4 @@ if __name__ == '__main__':
     VentIni.show() 
     sys.exit(app.exec_())
     
-
-
-
 # %%
