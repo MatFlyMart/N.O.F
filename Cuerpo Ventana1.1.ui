@@ -1242,10 +1242,10 @@ QPushButton:hover{
       <bool>false</bool>
      </property>
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;movimiento rectilineo uniforme&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Movimiento Rectilineo Uniforme&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="whatsThis">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Movimiento Rectilinio uniforme&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Movimiento Rectilinio Uniforme&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -1418,6 +1418,9 @@ border-radius: 16px;</string>
           <bold>true</bold>
          </font>
         </property>
+        <property name="toolTip">
+         <string>Velocidad en X/ Velocidad en Y</string>
+        </property>
         <property name="styleSheet">
          <string notr="true">QPushButton#bot1_2 {
   appearance: button;
@@ -1473,6 +1476,9 @@ QPushButton#bot1_2:hover{
       </item>
       <item>
        <widget class="QPushButton" name="bot2_2">
+        <property name="toolTip">
+         <string>Velocidad Neta / Angulo de Lanzamiento</string>
+        </property>
         <property name="styleSheet">
          <string notr="true">QPushButton#bot2_2 {
   appearance: button;
@@ -1523,6 +1529,9 @@ QPushButton#bot2_2:hover{
        <width>200</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Movimiento Rectilineo Uniformemente Variado</string>
      </property>
      <property name="styleSheet">
       <string notr="true">QPushButton#B {
@@ -1593,7 +1602,7 @@ QPushButton#B:disabled {
      <property name="geometry">
       <rect>
        <x>120</x>
-       <y>190</y>
+       <y>180</y>
        <width>221</width>
        <height>39</height>
       </rect>
@@ -1612,7 +1621,7 @@ QPushButton#B:disabled {
 border-radius: 16px;</string>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#ffffff;&quot;&gt;Elija el tipo de unidad&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600; color:#ffffff;&quot;&gt;Tipo de unidad&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="scaledContents">
       <bool>false</bool>
@@ -1630,6 +1639,9 @@ border-radius: 16px;</string>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QPushButton" name="Uni">
+        <property name="toolTip">
+         <string>Kilometros por Hora</string>
+        </property>
         <property name="styleSheet">
          <string notr="true">QPushButton#Uni {
   appearance: button;
@@ -1685,6 +1697,9 @@ QPushButton#Uni:hover{
       </item>
       <item>
        <widget class="QPushButton" name="Uni2">
+        <property name="toolTip">
+         <string>Metro por Segundo</string>
+        </property>
         <property name="styleSheet">
          <string notr="true">QPushButton#Uni2 {
   appearance: button;
@@ -1735,6 +1750,9 @@ QPushButton#Uni2:hover{
        <width>199</width>
        <height>31</height>
       </rect>
+     </property>
+     <property name="toolTip">
+      <string>Tiro Oblicuo o Caida Libre</string>
      </property>
      <property name="styleSheet">
       <string notr="true">QPushButton#C {
