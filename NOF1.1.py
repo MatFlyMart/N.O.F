@@ -175,7 +175,7 @@ class movimiento(QMainWindow, Ui_MainWindow2):
         self.close()
             
     def LimpiarGrafico(self):
-
+            self.animacion.event_source.stop()
             Ventana.Hide(self.Respuesta2, self.Respuesta3, self.bResp2, self.bResp3)
             Valores = [self.X0, self.Y0, self.Vx0, self.Vy0,
                        self.V0, self.T0, self.Ang, self.A0]
@@ -361,8 +361,6 @@ class movimiento(QMainWindow, Ui_MainWindow2):
         y_data = []
         
         def actualizar_animacion(frame):
-            self.bLimpiar.setEnabled(frame == t[-1])
-            
             if tipo == "Tiro OblicuoA" or tipo == "Tiro OblicuoB":    
                 self.ax.set_ylim(-self.yAltMax * 0.05, self.yAltMax * 1.05)
                 self.ax.set_xlim(self.x_0 - self.xFin * 0.05, self.xFin * 1.05)
@@ -391,6 +389,7 @@ class movimiento(QMainWindow, Ui_MainWindow2):
         
         self.canvas.draw()
         self.bGraficar.setEnabled(False)
+        self.bLimpiar.setEnabled(True)
         self.Tabs2.setTabEnabled(1, True)
         self.Tabs2.setTabEnabled(0, False)
         self.Tabs2.setCurrentIndex(1)
