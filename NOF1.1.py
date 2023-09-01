@@ -154,7 +154,7 @@ class movimiento(QMainWindow, Ui_MainWindow2):
                 return (-Z + np.sqrt(M)) / (a0)
         
     def ecTemp(v0, a0, t0):
-        return (-v0)/(a0) + t0
+        return ((-v0)/(a0) + t0 if a0 !=0 else -1)
     
     def tempFormat(v0, a0, t0):
             tFren = (-v0)/(a0) + t0
@@ -175,7 +175,9 @@ class movimiento(QMainWindow, Ui_MainWindow2):
         self.close()
             
     def LimpiarGrafico(self):
-            self.animacion.event_source.stop()
+            """ self.animacion.frame_seq.current_frame == t - 1:
+                self.animacion.event_source.stop() """
+                
             Ventana.Hide(self.Respuesta2, self.Respuesta3, self.bResp2, self.bResp3)
             Valores = [self.X0, self.Y0, self.Vx0, self.Vy0,
                        self.V0, self.T0, self.Ang, self.A0]
@@ -361,6 +363,8 @@ class movimiento(QMainWindow, Ui_MainWindow2):
         y_data = []
         
         def actualizar_animacion(frame):
+            self.bLimpiar.setEnabled(frame == t[-1])
+            
             if tipo == "Tiro OblicuoA" or tipo == "Tiro OblicuoB":    
                 self.ax.set_ylim(-self.yAltMax * 0.05, self.yAltMax * 1.05)
                 self.ax.set_xlim(self.x_0 - self.xFin * 0.05, self.xFin * 1.05)
@@ -381,18 +385,17 @@ class movimiento(QMainWindow, Ui_MainWindow2):
             line.set_data(x_data, y_data) 
             point.set_data(x,y)
             
-            
             return point, line,
         
-        self.animacion = animation.FuncAnimation(self.fig, actualizar_animacion, frames=t, interval=(50 if tipo == "TiroOblicuoA" or "TiroOblicuoB" else 1), 
+        self.animacion = animation.FuncAnimation(self.fig, actualizar_animacion, frames=t, interval=(25 if tipo == "TiroOblicuoA" or "TiroOblicuoB" else 1), 
                                                 cache_frame_data=False, save_count=0 ,repeat = False, blit = True)
         
         self.canvas.draw()
         self.bGraficar.setEnabled(False)
-        self.bLimpiar.setEnabled(True)
         self.Tabs2.setTabEnabled(1, True)
         self.Tabs2.setTabEnabled(0, False)
         self.Tabs2.setCurrentIndex(1)
+        
                     
 if __name__ == '__main__':
     # Inicializar la aplicación
