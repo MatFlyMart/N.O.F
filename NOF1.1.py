@@ -175,8 +175,8 @@ class movimiento(QMainWindow, Ui_MainWindow2):
         self.close()
             
     def LimpiarGrafico(self):
-            """ self.animacion.frame_seq.current_frame == t - 1:
-                self.animacion.event_source.stop() """
+            if self.running == True:
+                self.animacion.event_source.stop() 
                 
             Ventana.Hide(self.Respuesta2, self.Respuesta3, self.bResp2, self.bResp3)
             Valores = [self.X0, self.Y0, self.Vx0, self.Vy0,
@@ -304,8 +304,7 @@ class movimiento(QMainWindow, Ui_MainWindow2):
             print("Anda")
         else:
             print("No anda")
-   
-            
+         
     def graficar(self, tipo, unidad):
          
         self.y_0 = self.Y0.value()
@@ -362,8 +361,11 @@ class movimiento(QMainWindow, Ui_MainWindow2):
         x_data = [] 
         y_data = []
         
+        self.running = True
         def actualizar_animacion(frame):
-            self.bLimpiar.setEnabled(frame == t[-1])
+            
+            if frame == t[-1]:
+                self.running = False
             
             if tipo == "Tiro OblicuoA" or tipo == "Tiro OblicuoB":    
                 self.ax.set_ylim(-self.yAltMax * 0.05, self.yAltMax * 1.05)
@@ -387,9 +389,11 @@ class movimiento(QMainWindow, Ui_MainWindow2):
             
             return point, line,
         
-        self.animacion = animation.FuncAnimation(self.fig, actualizar_animacion, frames=t, interval=(25 if tipo == "TiroOblicuoA" or "TiroOblicuoB" else 1), 
+        self.animacion = animation.FuncAnimation(self.fig, actualizar_animacion, frames=t, interval=(50 if tipo == "TiroOblicuoA" or "TiroOblicuoB" else 1), 
                                                 cache_frame_data=False, save_count=0 ,repeat = False, blit = True)
         
+
+        self.bLimpiar.setEnabled(True)
         self.canvas.draw()
         self.bGraficar.setEnabled(False)
         self.Tabs2.setTabEnabled(1, True)
