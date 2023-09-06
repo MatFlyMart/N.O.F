@@ -288,22 +288,28 @@ class movimiento(QMainWindow, Ui_MainWindow2):
                                        + f", lo cual tarda t = {float('{:.1f}'.format(self.tAltMax))} {self.UnidadTemp} en llegar a el")         
     
     def Respuestas(self, numero):#Mejorar, ver como obtener que pregunta es, y q boton lo esta llamando (poner algo como boton.clicked.connect(que boton es))
-            
-        if numero == 2:
-            RespuestaUsuario = self.Respuesta3.value()
-            RespuestaCorrecta = self.Resp2
-        else:
-            RespuestaUsuario = self.Respuesta3.value()
-            RespuestaCorrecta = self.Resp3
+        
+        respuestasU = [None, None, self.Respuesta2, self.Respuesta3]
+        respuestasC = [None, None, self.Resp2, self.Resp3]
+        RespuestaUsuario = respuestasU[numero].value() 
+        RespuestaCorrecta = respuestasC[numero]
+        
+        def SetRed(Color):
+            if Color == "Rojo":
+                respuestasU[numero].setStyleSheet("background-color: red;  border-radius: 6px;")
+            elif Color == "Verde":
+                respuestasU[numero].setStyleSheet("background-color: green; border-radius: 6px;")
               
         print(RespuestaUsuario)
         print(RespuestaCorrecta)
         
             
         if RespuestaUsuario == RespuestaCorrecta:
-            print("Anda")
+            SetRed("Verde")
+            Boton = [None, None, self.bResp2, self.bResp3]
+            Boton[numero].setEnabled(False)
         else:
-            print("No anda")
+            SetRed("Rojo")
          
     def graficar(self, tipo, unidad):
          
@@ -360,13 +366,13 @@ class movimiento(QMainWindow, Ui_MainWindow2):
 
         x_data = [] 
         y_data = []
-        
+
         self.running = True
         def actualizar_animacion(frame):
-            
+
             if frame == t[-1]:
                 self.running = False
-            
+
             if tipo == "Tiro OblicuoA" or tipo == "Tiro OblicuoB":    
                 self.ax.set_ylim(-self.yAltMax * 0.05, self.yAltMax * 1.05)
                 self.ax.set_xlim(self.x_0 - self.xFin * 0.05, self.xFin * 1.05)
