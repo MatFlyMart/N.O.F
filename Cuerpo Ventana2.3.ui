@@ -1249,9 +1249,33 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true"> color: #FFFFFF;
-background-color:#0055ff;
- border-radius: 8px;</string>
+       <string notr="true">QPushButton#bResp2 {
+  background-color:#0055ff;
+  border: solid black;
+  border-radius: 6px;
+  border-width: 0 3px 3px 0;
+  color: #FFFFFF;
+  font-family: din-round,sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .8px;
+  margin: 0;
+  outline: none;
+  text-align: center;
+  text-transform: uppercase;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: 100%;
+}
+QPushButton#bResp2:hover{
+	background-color: rgb(0, 0, 255);
+}
+
+QPushButton#bResp2:disabled {
+  background-color: gray; /* Cambia el color de fondo a gris */
+  color: white; /* Cambia el color del texto a blanco */
+  border: 1px solid darkgray; /* Cambia el borde a un gris más oscuro */
+}</string>
       </property>
       <property name="text">
        <string>Enviar</string>
@@ -1267,9 +1291,33 @@ background-color:#0055ff;
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true"> color: #FFFFFF;
-background-color:#0055ff;
-border-radius: 8px;</string>
+       <string notr="true">QPushButton#bResp3 {
+  background-color:#0055ff;
+  border: solid black;
+  border-radius: 6px;
+  border-width: 0 3px 3px 0;
+  color: #FFFFFF;
+  font-family: din-round,sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .8px;
+  margin: 0;
+  outline: none;
+  text-align: center;
+  text-transform: uppercase;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: 100%;
+}
+QPushButton#bResp3:hover{
+	background-color: rgb(0, 0, 255);
+}
+
+QPushButton#bResp3:disabled {
+  background-color: gray; /* Cambia el color de fondo a gris */
+  color: white; /* Cambia el color del texto a blanco */
+  border: 1px solid darkgray; /* Cambia el borde a un gris más oscuro */
+}</string>
       </property>
       <property name="text">
        <string>Enviar</string>
