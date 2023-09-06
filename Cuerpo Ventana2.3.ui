@@ -59,31 +59,19 @@ background-color: qradialgradient(spread:reflect, cx:0.5, cy:0.5, radius:0.989, 
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton#bLimpiar {
-  appearance: button;
   background-color:#0055ff;
   border: solid black;
   border-radius: 6px;
   border-width: 0 3px 3px 0;
-  box-sizing: border-box;
   color: #FFFFFF;
-  cursor: pointer;
-  display: inline-block;
   font-family: din-round,sans-serif;
-  font-size: 15px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: .8px;
-  line-height: 20px;
   margin: 0;
   outline: none;
-  overflow: visible;
-  padding: 5px 16px;
   text-align: center;
   text-transform: uppercase;
-  touch-action: manipulation;
-  transform: translateZ(0);
-  transition: filter .2s;
-  user-select: none;
-  -webkit-user-select: none;
   vertical-align: middle;
   white-space: nowrap;
   width: 100%;
@@ -93,12 +81,10 @@ QPushButton#bLimpiar:hover{
 }
 
 QPushButton#bLimpiar:disabled {
-  background-color: #ccc; /* Color de fondo gris */
-  border: 1px solid #888; /* Borde gris */
-  color: #888; /* Texto gris */
-  cursor: not-allowed; /* Cambiar el cursor a &quot;no permitido&quot; */
-}
-</string>
+  background-color: gray; /* Cambia el color de fondo a gris */
+  color: white; /* Cambia el color del texto a blanco */
+  border: 1px solid darkgray; /* Cambia el borde a un gris más oscuro */
+}</string>
     </property>
     <property name="text">
      <string>Limpiar Grafico</string>
@@ -123,31 +109,19 @@ QPushButton#bLimpiar:disabled {
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton#bGraficar {
-  appearance: button;
   background-color:#0055ff;
   border: solid black;
   border-radius: 6px;
   border-width: 0 3px 3px 0;
-  box-sizing: border-box;
   color: #FFFFFF;
-  cursor: pointer;
-  display: inline-block;
   font-family: din-round,sans-serif;
-  font-size: 15px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: .8px;
-  line-height: 20px;
   margin: 0;
   outline: none;
-  overflow: visible;
-  padding: 5px 16px;
   text-align: center;
   text-transform: uppercase;
-  touch-action: manipulation;
-  transform: translateZ(0);
-  transition: filter .2s;
-  user-select: none;
-  -webkit-user-select: none;
   vertical-align: middle;
   white-space: nowrap;
   width: 100%;
@@ -157,12 +131,10 @@ QPushButton#bGraficar:hover{
 }
 
 QPushButton#bGraficar:disabled {
-  background-color: #ccc; /* Color de fondo gris */
-  border: 1px solid #888; /* Borde gris */
-  color: #888; /* Texto gris */
-  cursor: not-allowed; /* Cambiar el cursor a &quot;no permitido&quot; */
-}
-</string>
+  background-color: gray; /* Cambia el color de fondo a gris */
+  color: white; /* Cambia el color del texto a blanco */
+  border: 1px solid darkgray; /* Cambia el borde a un gris más oscuro */
+}</string>
     </property>
     <property name="text">
      <string>Graficar</string>
@@ -1753,15 +1725,11 @@ background-color: rgb(85, 170, 255);
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton#bAtras {
-  appearance: button;
   background-color:#0055ff;
   border: solid black;
   border-radius: 6px;
   border-width: 0 3px 3px 0;
-  box-sizing: border-box;
   color: #FFFFFF;
-  cursor: pointer;
-  display: inline-block;
   font-family: din-round,sans-serif;
   font-size: 15px;
   font-weight: 700;
@@ -1769,15 +1737,9 @@ background-color: rgb(85, 170, 255);
   line-height: 20px;
   margin: 0;
   outline: none;
-  overflow: visible;
   padding: 5px 16px;
   text-align: center;
   text-transform: uppercase;
-  touch-action: manipulation;
-  transform: translateZ(0);
-  transition: filter .2s;
-  user-select: none;
-  -webkit-user-select: none;
   vertical-align: middle;
   white-space: nowrap;
   width: 100%;
