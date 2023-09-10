@@ -52,7 +52,7 @@ background-color: qradialgradient(spread:reflect, cx:0.5, cy:0.5, radius:0.989, 
     <property name="font">
      <font>
       <family>din-round</family>
-      <pointsize>-1</pointsize>
+      <pointsize>1</pointsize>
       <weight>87</weight>
       <bold>true</bold>
      </font>
@@ -102,7 +102,7 @@ QPushButton#bLimpiar:disabled {
     <property name="font">
      <font>
       <family>din-round</family>
-      <pointsize>-1</pointsize>
+      <pointsize>1</pointsize>
       <weight>87</weight>
       <bold>true</bold>
      </font>
@@ -1185,7 +1185,7 @@ background-color: rgb(255, 170, 127);</string>
       <property name="font">
        <font>
         <family>din-round</family>
-        <pointsize>-1</pointsize>
+        <pointsize>1</pointsize>
         <weight>87</weight>
         <bold>true</bold>
        </font>
@@ -1479,7 +1479,7 @@ QPushButton#bResp3:disabled {
       <property name="font">
        <font>
         <family>din-round</family>
-        <pointsize>-1</pointsize>
+        <pointsize>1</pointsize>
         <weight>87</weight>
         <bold>true</bold>
        </font>
@@ -1519,7 +1519,7 @@ p, li { white-space: pre-wrap; }
       <property name="font">
        <font>
         <family>din-round</family>
-        <pointsize>-1</pointsize>
+        <pointsize>1</pointsize>
         <weight>87</weight>
         <bold>true</bold>
        </font>
@@ -1564,7 +1564,7 @@ p, li { white-space: pre-wrap; }
       <property name="font">
        <font>
         <family>din-round</family>
-        <pointsize>-1</pointsize>
+        <pointsize>1</pointsize>
         <weight>87</weight>
         <bold>true</bold>
        </font>
@@ -1616,7 +1616,7 @@ QPushButton#bDatos:disabled {
       <property name="font">
        <font>
         <family>din-round</family>
-        <pointsize>-1</pointsize>
+        <pointsize>1</pointsize>
         <weight>87</weight>
         <bold>true</bold>
        </font>
@@ -1718,7 +1718,7 @@ background-color: rgb(85, 170, 255);
     <property name="font">
      <font>
       <family>din-round</family>
-      <pointsize>-1</pointsize>
+      <pointsize>1</pointsize>
       <weight>87</weight>
       <bold>true</bold>
      </font>

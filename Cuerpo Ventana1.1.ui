@@ -1216,7 +1216,7 @@ QPushButton:hover{
      <property name="font">
       <font>
        <family>din-round</family>
-       <pointsize>-1</pointsize>
+       <pointsize>1</pointsize>
        <weight>87</weight>
        <italic>false</italic>
        <bold>true</bold>
@@ -1349,7 +1349,7 @@ border-radius: 16px;</string>
         <property name="font">
          <font>
           <family>din-round</family>
-          <pointsize>-1</pointsize>
+          <pointsize>1</pointsize>
           <weight>87</weight>
           <italic>false</italic>
           <bold>true</bold>
@@ -1403,6 +1403,14 @@ QPushButton#bot1_2:hover{
       </item>
       <item>
        <widget class="QPushButton" name="bot2_2">
+        <property name="font">
+         <font>
+          <family>din-round</family>
+          <pointsize>1</pointsize>
+          <weight>87</weight>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="toolTip">
          <string>Velocidad Neta / Angulo de Lanzamiento</string>
         </property>
