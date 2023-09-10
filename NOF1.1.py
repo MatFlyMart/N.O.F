@@ -348,7 +348,7 @@ class movimiento(QMainWindow, Ui_MainWindow2):
             
             if tipo == "MRUV":
                 self.a_0 = self.A0.value()
-                self.Pregunta1.setText(f"Parametros:\nX0 = {self.x_0} {self.textUni}\nY0 = {self.y_0} {self.textUni}\nT0 = {self.t_0} {self.UnidadTemp}\nVx0 = {self.vx_0} {unidad}\nA0 = {self.a_0}")
+                self.Pregunta1.setText(f"Parametros:\nX0 = {self.x_0} {self.textUni}\nY0 = {self.y_0} {self.textUni}\nT0 = {self.t_0} {self.UnidadTemp}\nVx0 = {self.vx_0} {unidad}\nA0 = {self.a_0} {self.UniAcel}")
                 
                 if movimiento.ecTemp(self.vx_0, self.a_0,self.t_0) > 0:
                     self.Frena = True
