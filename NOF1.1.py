@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib import animation, rc
-from PyQt5 import uic, QtWidgets
+from PyQt5 import uic
 from PyQt5.QtGui import QFont
 rc('animation', html='html5')
 from PyQt5.QtWidgets import QMainWindow, QApplication, QSizePolicy, QGraphicsScene, QGraphicsView
@@ -31,7 +31,7 @@ class Ventana(QMainWindow, Ui_MainWindow):
         #Funciones q hace cada boton
         self.A.clicked.connect(lambda: self.OpsUni("MRU"))
         self.B.clicked.connect(lambda: self.OpsUni("MRUV"))
-        self.C.clicked.connect(lambda: self.mostrarOpciones())
+        self.C.clicked.connect(self.mostrarOpciones)
         self.Uni.clicked.connect(lambda: self.abrirMovimiento("Km/h"))
         self.Uni2.clicked.connect(lambda: self.abrirMovimiento("M/s"))
         self.bot1_2.clicked.connect(lambda: self.OpsUni("Tiro OblicuoA"))
@@ -56,7 +56,7 @@ class Ventana(QMainWindow, Ui_MainWindow):
         Ventana.Show(self.PregUni, self.Uni, self.Uni2, self.bAtras)
         self.tipo = tipo
         
-        if tipo == "Tiro OblicuoA" or tipo == "Tiro OblicuoB": 
+        if tipo in ("Tiro OblicuoA",  "Tiro OblicuoB"):
             Ventana.Hide(self.Preg, self.bot1_2, self.bot2_2)
             
     def mostrarOpciones(self):
@@ -65,8 +65,8 @@ class Ventana(QMainWindow, Ui_MainWindow):
                                   
     def abrirMovimiento(self, unidad):
         VentanaGraph = movimiento(self.tipo, unidad)
-        self.close()
-        VentanaGraph.show() 
+        self.destroy()
+        VentanaGraph.show()
         
         #Comandos para q cuando vuelvas atras en la ventana del grafico este todo como q no tocaste nada
         Ventana.Show(self.A, self.B, self.C, self.PregunIni)
@@ -78,24 +78,25 @@ class movimiento(QMainWindow, Ui_MainWindow2):
     def __init__(self, tipo, unidad):
         super().__init__()
         self.setupUi(self)
+        
+        #Creacion y representacion del grafico
         plt.style.use("bmh")
         self.fig, self.ax = plt.subplots(figsize = (9.5,7),dpi=100)
         self.canvas = FigureCanvas(self.fig)
         self.canvas.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.canvas.updateGeometry() 
-        self.animacion = None
-        self.textUni = ('Km' if unidad=='Km/h' else 'Mts')
-        self.UnidadTemp = ("Horas" if unidad == "Km/h" else "Segundos")
-        self.UniAcel = ("Km/h²" if unidad == "Km/h" else "Mts/seg²")
-        self.setAx()
-        self.a_0 = 0
-        
         scene = QGraphicsScene(self)
         scene.setSceneRect(60, 60 , 800, 600)
         view = QGraphicsView(scene)
         scene.addWidget(self.canvas)
         self.Grafico.setScene(scene)
         
+        self.textUni = ('Km' if unidad=='Km/h' else 'Mts')
+        self.UnidadTemp = ("Horas" if unidad == "Km/h" else "Segundos")
+        self.UniAcel = ("Km/h²" if unidad == "Km/h" else "Mts/seg²")
+        self.a_0 = 0
+        self.setAx()
+        self.running = False
         
         Hides = []
         LayoutsHide = []
@@ -134,167 +135,164 @@ class movimiento(QMainWindow, Ui_MainWindow2):
         self.bGraficar.clicked.connect(lambda: self.graficar(tipo, unidad))
         self.bNewPreg.clicked.connect(lambda: self.NuevaPregunta(tipo, self.tFin, self.xFin))
         self.bDatos.clicked.connect(lambda: self.ViewDatos(tipo))
-        self.bResp2.clicked.connect(lambda: self.Respuestas(2))
-        self.bResp3.clicked.connect(lambda: self.Respuestas(3))  
+        self.bResp2.clicked.connect(lambda: self.Respuestas(0))
+        self.bResp3.clicked.connect(lambda: self.Respuestas(1))
     
     #Metodos "Globales"
     def EcVel(v0, a, t0, t):
-            return v0 + a * (t - t0)
+        return v0 + a * (t - t0)
         
     def EcMov (p0, v0, t0, a, t):
-            return p0 + v0 * (t-t0) + (1/2) * a * ((t-t0)**2)
+        return p0 + v0 * (t-t0) + (1/2) * a * ((t-t0)**2)
         
     def CalcTempDist (p0, v0, t0, a0, Fin, subindice):
-            Z = v0 + a0 * t0
-            Ñ = (p0 - Fin) - v0 * t0 - a0 * t0**2 * 1/2
-            M = Z**2 -  2 * a0 * Ñ
-            if subindice == "Primera":
-                return (-Z - np.sqrt(M)) / (a0) # Arreglar
-            else:
-                return (-Z + np.sqrt(M)) / (a0)
+        Z = v0 + a0 * t0
+        Ñ = (p0 - Fin) - v0 * t0 - a0 * t0**2 * 1/2
+        M = Z**2 -  2 * a0 * Ñ
+        if subindice == "Primera":
+            return (-Z - np.sqrt(M)) / (a0) # Arreglar
+        else:
+            return (-Z + np.sqrt(M)) / (a0)
         
     def ecTemp(v0, a0, t0):
         return ((-v0)/(a0) + t0 if a0 !=0 else -1)
     
     def tempFormat(v0, a0, t0):
-            tFren = (-v0)/(a0) + t0
-            horas = int(tFren)
-            minutos = int((tFren - horas) * 60)
-            return horas + minutos/100    
+        tFren = (-v0)/(a0) + t0
+        horas = int(tFren)
+        minutos = int((tFren - horas) * 60)
+        return horas + minutos/100    
     
     #Metodos "Privados del objeto"
     def setAx(self):
-            self.ax.set_title("Posicion en funcion del tiempo")
-            self.ax.set_xlabel('Posicion en X (' + self.textUni + ')')
-            self.ax.set_ylabel('Posicion en Y (' + self.textUni + ')')
-            self.ax.grid(linewidth=0.5, color='black')
+        self.ax.set_title("Posicion en funcion del tiempo")
+        self.ax.set_xlabel('Posicion en X (' + self.textUni + ')')
+        self.ax.set_ylabel('Posicion en Y (' + self.textUni + ')')
+        self.ax.grid(linewidth=0.5, color='black')
 
     def abrir(self):
         self.ax.clear()
+        plt.close(self.fig)
+        self.Grafico.close()
+        self.destroy()
+        
         VentIni.show()
-        self.close()
             
     def LimpiarGrafico(self):
-            if self.running == True:
-                self.animacion.event_source.stop() 
+        if self.running is True:
+            self.animacion.event_source.stop()
                 
-            Ventana.Hide(self.Respuesta2, self.Respuesta3, self.bResp2, self.bResp3)
-            Valores = [self.X0, self.Y0, self.Vx0, self.Vy0,
-                       self.V0, self.T0, self.Ang, self.A0]
-            for item in Valores:
-                item.setValue(0)
+        Ventana.Hide(self.Respuesta2, self.Respuesta3, self.bResp2, self.bResp3)
+        Valores = [self.X0, self.Y0, self.Vx0, self.Vy0,
+        self.V0, self.T0, self.Ang, self.A0]
+            
+        for item in Valores:
+            item.setValue(0)
         
-            self.ax.clear()
-            self.setAx()
-            self.ax.plot([], []) 
-            self.ax.set_xlim(0,1)
-            self.ax.set_ylim(0,1)
-            self.canvas.draw()    
+        self.ax.clear()
+        self.setAx()
+        self.ax.plot([], [])
+        self.ax.set_xlim(0,1)
+        self.ax.set_ylim(0,1)
+        self.canvas.draw()
              
-            self.bGraficar.setEnabled(True)
-            self.bLimpiar.setEnabled(False) 
-            self.Tabs2.setCurrentIndex(0)
-            self.Tabs2.setTabEnabled(1, False)  
-            self.Tabs2.setTabEnabled(0, True)                                      
+        self.bGraficar.setEnabled(True)
+        self.bLimpiar.setEnabled(False)
+        self.Tabs2.setCurrentIndex(0)
+        self.Tabs2.setTabEnabled(1, False)
+        self.Tabs2.setTabEnabled(0, True)                                   
         
     def NuevaPregunta(self, tipo, A, B):
-            Pregunta1 = self.PregRandom(tipo, A, B)
-            texto = Pregunta1[0]
-            self.Resp2 = Pregunta1[1]
+        Pregunta1 = self.PregRandom(tipo, A, B)
+        texto = Pregunta1[0]
+        self.Resp2 = Pregunta1[1]
             
-            Pregunta2 = self.PregRandom(tipo, A, B)
-            texto1 = Pregunta2[0]
-            self.Resp3 = Pregunta2[1]
+        Pregunta2 = self.PregRandom(tipo, A, B)
+        texto1 = Pregunta2[0]
+        self.Resp3 = Pregunta2[1]
 
-            self.Pregunta2.setText(texto)
-            self.Pregunta3.setText(texto1)
+        self.Pregunta2.setText(texto)
+        self.Pregunta3.setText(texto1)
             
-            Show = [self.Respuesta2, self.Respuesta3, self.bResp2, self.bResp3]
-            for item in Show:
-                item.setGeometry(self.Geometry[item])  # Restaura la geometría original
-                item.show()
+        Show = [self.Respuesta2, self.Respuesta3, self.bResp2, self.bResp3]
+        for item in Show:
+            item.setGeometry(self.Geometry[item])  # Restaura la geometría original
+            item.show()
             
-            self.Pregunta2.show()
-            self.Pregunta3.show()
-            self.Pregunta2.resize(160, 130)
-            self.Pregunta3.resize(160, 130)
+        self.Pregunta2.show()
+        self.Pregunta3.show()
+        self.Pregunta2.resize(160, 130)
+        self.Pregunta3.resize(160, 130)
           
     def PregRandom(self, tipo, StopTemp, StopDist):
-            NumRan1 = random.randrange(0, 100)
-            NumRan2 = random.randrange(0, int(StopTemp) if NumRan1 < 50 else int(StopDist))  
-            if tipo == "MRUV" or tipo == "MRU":
-                if NumRan1 < 25:
-                    return f" Que velocidad tiene la particula en: t = {NumRan2} {self.UnidadTemp}??", float("{:.1f}".format(movimiento.EcVel(self.x_0, self.a_0, self.t_0, NumRan2)))
-                elif NumRan1 < 50:
-                    return f" Cual es la posicion que tiene la particula habiendo pasado: t = {NumRan2} {self.UnidadTemp}??", float("{:.1f}".format(movimiento.EcMov(self.x_0, self.vx_0, self.t_0, self.a_0, NumRan2)))
-                elif NumRan1 < 75:
-                    if tipo == "MRUV":
-                        return (f" Si tenemos un sensor de velocidad puesto a los x = {NumRan2} {self.textUni} del punto de partida,"
-                        + f"que velocidad nos marca el aparato??"),float("{:.1f}".format(movimiento.EcVel(self.x_0, self.a_0, self.t_0, movimiento.CalcTempDist(self.x_0, self.a_0, self.t_0, self.a_0, NumRan2, "segunda"))))
-                    else:
-                        return f" Que velocidad tiene la particula en: x = {NumRan2} {self.UnidadTemp}??", float("{:.1f}".format(movimiento.EcVel(self.x_0, self.a_0, self.t_0, (NumRan2 - self.x_0)/ self.vx_0)))
-                else:
-                    if self.Frena == True:  
-                        NumRan3 = random.randrange(0, 100)
-                        if NumRan3 < 50:                  
-                            return f" A que distancia se frena el objeto??",  float("{:.1f}".format(self.xFrena))
-                        else:
-                            return f" Cuanto tiempo pasa hasta que la particula se frene completamente??", float("{:.1f}".format(self.tFrena))
-                    else:
-                        return f" Que velocidad tiene la particula en: x = {NumRan2} {self.UnidadTemp}??", float("{:.1f}".format(movimiento.EcVel(self.x_0, self.a_0, self.t_0, (NumRan2 - self.x_0)/ self.vx_0)))
-            else: 
-                NumRan3 = random.randrange(1, 100)         
-                if NumRan1 < 25:
-                    if NumRan3 <50:
-                        return f" Que velocidad en x tiene la particula en: t = {NumRan2} {self.UnidadTemp}?? ",  float("{:.1f}".format(self.vx_0))
-                    else:
-                        return f" Que velocidad en y tiene la particula en: t = {NumRan2} {self.UnidadTemp}??", float("{:.1f}".format(movimiento.EcVel(self.vy_0, -self.g, self.t_0, NumRan2)))
-                elif NumRan1 < 50:
-                    if NumRan3 < 50:
-                        return f" Cuanta distancia horizontal recorrio la particula en: t = {NumRan2} {self.UnidadTemp}??", float("{:.1f}".format(movimiento.EcMov(self.x_0, self.vx_0, self.t_0, self.a_0, NumRan2)))
-                    else:
-                        return f" Que altura alcanza la particula en: t = {NumRan2} {self.UnidadTemp}??", float("{:.1f}".format(movimiento.EcMov(self.y_0, self.vy_0, self.t_0, -self.g, NumRan2)))
-                elif NumRan1 < 75:
-                    if NumRan3 < 50:
-                        return f" Que velocidad neta o total tiene la particula en: x = {NumRan2} {self.textUni}??", float("{:.1f}".format(np.sqrt((movimiento.EcVel(self.vy_0, self.t_0, -self.g, (NumRan2 - self.x_0)/ self.vx_0))**2 + (self.vx_0)**2)))
-                    else:
-                         return f" Que altura alcanza la particula en: x = {NumRan2} {self.textUni}??", str(movimiento.EcMov(self.y_0, self.vy_0, self.t_0, self.g, (NumRan2 - self.x_0)/ self.vx_0)).strip()    #reahcer, la idea esq solo sean preguntas de los datos q dio
-                else:
-                    NumRan4 = random.randrange(self.y_0, int(self.yAltMax))
-                    if NumRan3 < 50:
-                        return f" Que velocidad neta o total tiene la particula la primera vez que pasa por : y = {NumRan4} {self.textUni}??", float("{:.1f}".format(np.sqrt((movimiento.EcVel(self.vy_0, self.t_0, -self.g, movimiento.CalcTempDist(self.y_0, self.vy_0, self.t_0, -self.g, NumRan4, "Primera")**2 + (self.vx_0)**2)))))
-                    else:
-                        return f" Que velocidad neta o total tiene la particula la segunda vez que pasa por : y = {NumRan4} {self.textUni}??", float("{:.1f}".format(np.sqrt((movimiento.EcVel(self.vy_0, self.t_0, -self.g, movimiento.CalcTempDist(self.y_0, self.vy_0, self.t_0, -self.g, NumRan4, "Segunda")**2 + (self.vx_0)**2))))) #este es
+        NumRan1 = random.randrange(0, 100)
+        NumRan2 = random.randrange(0, int(StopTemp) if NumRan1 < 50 else int(StopDist))  
+        if tipo in("MRUV", "MRU"):
+            if NumRan1 < 25:
+                return f" Que velocidad tiene la particula en: t = {NumRan2} {self.UnidadTemp}??", float("{:.1f}".format(movimiento.EcVel(self.x_0, self.a_0, self.t_0, NumRan2)))
+            elif NumRan1 < 50:
+                return f" Cual es la posicion que tiene la particula habiendo pasado: t = {NumRan2} {self.UnidadTemp}??", float("{:.1f}".format(movimiento.EcMov(self.x_0, self.vx_0, self.t_0, self.a_0, NumRan2)))
+            elif NumRan1 < 75:
+                if tipo == "MRUV":
+                    return (f" Si tenemos un sensor de velocidad puesto a los x = {NumRan2} {self.textUni} del punto de partida,"
+                    + "que velocidad nos marca el aparato??"),float("{:.1f}".format(movimiento.EcVel(self.x_0, self.a_0, self.t_0, movimiento.CalcTempDist(self.x_0, self.a_0, self.t_0, self.a_0, NumRan2, "segunda"))))
+                return f" Que velocidad tiene la particula en: x = {NumRan2} {self.UnidadTemp}??", float("{:.1f}".format(movimiento.EcVel(self.x_0, self.a_0, self.t_0, (NumRan2 - self.x_0)/ self.vx_0)))
+            else:
+                if self.Frena is True:  
+                    NumRan3 = random.randrange(0, 100)
+                    if NumRan3 < 50:        
+                        return "A que distancia se frena el objeto??",  float("{:.1f}".format(self.xFrena))
+                    return "Cuanto tiempo pasa hasta que la particula se frene completamente??", float("{:.1f}".format(self.tFrena))
+                return f" Que velocidad tiene la particula en: x = {NumRan2} {self.UnidadTemp}??", float("{:.1f}".format(movimiento.EcVel(self.x_0, self.a_0, self.t_0, (NumRan2 - self.x_0)/ self.vx_0)))
+        else:
+            NumRan3 = random.randrange(1, 100)         
+            if NumRan1 < 25:
+                if NumRan3 <50:
+                    return f" Que velocidad en x tiene la particula en: t = {NumRan2} {self.UnidadTemp}?? ",  float("{:.1f}".format(self.vx_0))
+                return f" Que velocidad en y tiene la particula en: t = {NumRan2} {self.UnidadTemp}??", float("{:.1f}".format(movimiento.EcVel(self.vy_0, -self.g, self.t_0, NumRan2)))
+            elif NumRan1 < 50:
+                if NumRan3 < 50:
+                    return f" Cuanta distancia horizontal recorrio la particula en: t = {NumRan2} {self.UnidadTemp}??", float("{:.1f}".format(movimiento.EcMov(self.x_0, self.vx_0, self.t_0, self.a_0, NumRan2)))
+                return f" Que altura alcanza la particula en: t = {NumRan2} {self.UnidadTemp}??", float("{:.1f}".format(movimiento.EcMov(self.y_0, self.vy_0, self.t_0, -self.g, NumRan2)))
+            elif NumRan1 < 75:
+                if NumRan3 < 50:
+                    return f" Que velocidad neta o total tiene la particula en: x = {NumRan2} {self.textUni}??", float("{:.1f}".format(np.sqrt((movimiento.EcVel(self.vy_0, self.t_0, -self.g, (NumRan2 - self.x_0)/ self.vx_0))**2 + (self.vx_0)**2)))
+                return f" Que altura alcanza la particula en: x = {NumRan2} {self.textUni}??", str(movimiento.EcMov(self.y_0, self.vy_0, self.t_0, self.g, (NumRan2 - self.x_0)/ self.vx_0)).strip()    #reahcer, la idea esq solo sean preguntas de los datos q dio
+            else:
+                NumRan4 = random.randrange(self.y_0, int(self.yAltMax))
+                if NumRan3 < 50:
+                    return f" Que velocidad neta o total tiene la particula la primera vez que pasa por : y = {NumRan4} {self.textUni}??", float("{:.1f}".format(np.sqrt((movimiento.EcVel(self.vy_0, self.t_0, -self.g, movimiento.CalcTempDist(self.y_0, self.vy_0, self.t_0, -self.g, NumRan4, "Primera")**2 + (self.vx_0)**2)))))
+                return f" Que velocidad neta o total tiene la particula la segunda vez que pasa por : y = {NumRan4} {self.textUni}??", float("{:.1f}".format(np.sqrt((movimiento.EcVel(self.vy_0, self.t_0, -self.g, movimiento.CalcTempDist(self.y_0, self.vy_0, self.t_0, -self.g, NumRan4, "Segunda")**2 + (self.vx_0)**2))))) #este es
                                  
     def ViewDatos(self, tipo):
-            self.Pregunta2.resize(160, 160)
-            self.Pregunta3.resize(160, 160)
-            Ventana.Hide(self.Respuesta2, self.Respuesta3, self.bResp2, self.bResp3)
-            
-            if tipo == "MRUV":
-                font = QFont("Courier", 16)  # Cambia "Arial" por la fuente que desees y 16 por el tamaño deseado
-                self.Pregunta2.setFont(font)
-                self.Pregunta2.show()
-                self.Pregunta2.setText(f"La particula se frena en x = {float('{:.1f}'.format(self.xFrena))} {self.textUni}"
-                                       + f", el tiempo transcurrido antes de que se frene es de t = {float('{:.1f}'.format(self.tFrena))} {self.UnidadTemp}")
-                self.Pregunta2.resize(160, 330)
-            else:
-                self.Pregunta2.show()
-                self.Pregunta3.show()   
-                self.Pregunta2.setText(f"El tiempo que tarda la particula en llegar al suelo nuevamente es de t = {float('{:.1f}'.format(self.tFin))} {self.UnidadTemp}"
-                                       + f", este tiempo indica que la distancia recorrida es de x = {float('{:.1f}'.format(self.xFin))} {self.textUni}")
-                self.Pregunta3.setText(f"La altura maxima a la que llega la particula es de y = {float('{:.1f}'.format(self.yAltMax))} {self.textUni}"
-                                       + f", dicha altura se alcanza a los x = {float('{:.1f}'.format(self.xAltMAx))} {self.textUni}"
-                                       + f", lo cual tarda t = {float('{:.1f}'.format(self.tAltMax))} {self.UnidadTemp} en llegar a el")         
+        self.Pregunta2.resize(160, 160)
+        self.Pregunta3.resize(160, 160)
+        Ventana.Hide(self.Respuesta2, self.Respuesta3, self.bResp2, self.bResp3)
+
+        if tipo == "MRUV":
+            font = QFont("Courier", 16)  # Cambia "Arial" por la fuente que desees y 16 por el tamaño deseado
+            self.Pregunta2.setFont(font)
+            self.Pregunta2.show()
+            self.Pregunta2.setText(f"La particula se frena en x = {float('{:.1f}'.format(self.xFrena))} {self.textUni}"
+            + f", el tiempo transcurrido antes de que se frene es de t = {float('{:.1f}'.format(self.tFrena))} {self.UnidadTemp}")
+            self.Pregunta2.resize(160, 330)
+        else:
+            self.Pregunta2.show()
+            self.Pregunta3.show()   
+            self.Pregunta2.setText(f"El tiempo que tarda la particula en llegar al suelo nuevamente es de t = {float('{:.1f}'.format(self.tFin))} {self.UnidadTemp}"
+            + f", este tiempo indica que la distancia recorrida es de x = {float('{:.1f}'.format(self.xFin))} {self.textUni}")
+            self.Pregunta3.setText(f"La altura maxima a la que llega la particula es de y = {float('{:.1f}'.format(self.yAltMax))} {self.textUni}"
+            + f", dicha altura se alcanza a los x = {float('{:.1f}'.format(self.xAltMAx))} {self.textUni}"
+            + f", lo cual tarda t = {float('{:.1f}'.format(self.tAltMax))} {self.UnidadTemp} en llegar a el")         
     
     def Respuestas(self, numero):#Mejorar, ver como obtener que pregunta es, y q boton lo esta llamando (poner algo como boton.clicked.connect(que boton es))
         
-        respuestasU = [None, None, self.Respuesta2, self.Respuesta3]
-        respuestasC = [None, None, self.Resp2, self.Resp3]
+        respuestasU = [self.Respuesta2, self.Respuesta3]
+        respuestasC = [self.Resp2, self.Resp3]
         RespuestaUsuario = respuestasU[numero].value() 
         RespuestaCorrecta = respuestasC[numero]
         
-        def SetRed(Color):
+        def SetColour(Color):
             if Color == "Rojo":
                 respuestasU[numero].setStyleSheet("background-color: red;  border-radius: 6px;")
             elif Color == "Verde":
@@ -305,11 +303,11 @@ class movimiento(QMainWindow, Ui_MainWindow2):
         
             
         if RespuestaUsuario == RespuestaCorrecta:
-            SetRed("Verde")
-            Boton = [None, None, self.bResp2, self.bResp3]
+            SetColour("Verde")
+            Boton = [self.bResp2, self.bResp3]
             Boton[numero].setEnabled(False)
         else:
-            SetRed("Rojo")
+            SetColour("Rojo")
          
     def graficar(self, tipo, unidad):
          
@@ -318,7 +316,7 @@ class movimiento(QMainWindow, Ui_MainWindow2):
         self.t_0 = self.T0.value()
         self.vx_0 = self.Vx0.value()
 
-        if tipo == "Tiro OblicuoA" or tipo == "Tiro OblicuoB":     
+        if tipo in ("Tiro OblicuoA", "Tiro OblicuoB"):
             self.g = 9.8       
             if tipo == "Tiro OblicuoB":
                 self.Angulo = self.Ang.value()
@@ -328,17 +326,17 @@ class movimiento(QMainWindow, Ui_MainWindow2):
                 self.vy_0 = self.Vy0.value()
                 angulo = (np.tanh(self.vy_0/self.vx_0) * 180 / np.pi if self.vx_0 != 0 else 45) #VER ANG NEG
                 self.Angulo = float("{:.1f}".format(angulo))
-            
+
             self.Pregunta1.setText(f"Parametros:\n\nX0  = {self.x_0} {self.textUni}\nY0  = {self.y_0} {self.textUni}\nVx0 = {float('{:.1f}'.format(self.vx_0))} {unidad}\n"
-                                   + f"Vy0 = {float('{:.1f}'.format(self.vy_0))} {unidad}\nA0  = {-self.g} {self.UniAcel}\nAng = {self.Angulo}º")
-          
+            + f"Vy0 = {float('{:.1f}'.format(self.vy_0))} {unidad}\nA0  = {-self.g} {self.UniAcel}\nAng = {self.Angulo}º")
+
             self.tFin = movimiento.CalcTempDist(self.y_0, self.vy_0, self.t_0, -self.g, 0, "Primera")
             self.xFin = movimiento.EcMov(self.x_0, self.vx_0, self.t_0, self.a_0, self.tFin)
             t = np.linspace(0, self.tFin, 100)
             self.tAltMax = movimiento.ecTemp(self.vy_0, -self.g, self.t_0)
             self.xAltMAx =  movimiento.EcMov(self.x_0, self.vx_0, self.t_0, self.a_0, self.tAltMax)
             self.yAltMax =  movimiento.EcMov(self.y_0, self.vy_0, self.t_0, -self.g, self.tAltMax)
-        else:            
+        else:
             self.g = 0
             self.vy_0 = 0
             
@@ -373,7 +371,7 @@ class movimiento(QMainWindow, Ui_MainWindow2):
             if frame == t[-1]:
                 self.running = False
 
-            if tipo == "Tiro OblicuoA" or tipo == "Tiro OblicuoB":    
+            if tipo in ("Tiro OblicuoA", "Tiro OblicuoB"):
                 self.ax.set_ylim(-self.yAltMax * 0.05, self.yAltMax * 1.05)
                 self.ax.set_xlim(self.x_0 - self.xFin * 0.05, self.xFin * 1.05)
             else:
@@ -381,8 +379,8 @@ class movimiento(QMainWindow, Ui_MainWindow2):
                 self.ax.set_xlim(min(movimiento.EcMov(self.x_0, self.vx_0, self.t_0, self.a_0, t)) * 1.05, 
                                  max(movimiento.EcMov(self.x_0, self.vx_0, self.t_0, self.a_0, t)) * 1.05)
 
-            x = movimiento.EcMov(self.x_0, self.vx_0, self.t_0, self.a_0, frame) 
-            y = movimiento.EcMov(self.y_0, self.vy_0, self.t_0, -self.g, frame)  
+            x = [movimiento.EcMov(self.x_0, self.vx_0, self.t_0, self.a_0, frame)]
+            y = [movimiento.EcMov(self.y_0, self.vy_0, self.t_0, -self.g, frame)]
             point, = self.ax.plot([], [], 'bo', markersize = 12, label = "Particula")
             point.set_data([], [])
             line, = self.ax.plot([], [], 'r--', label = "Trayectoria")
@@ -395,8 +393,8 @@ class movimiento(QMainWindow, Ui_MainWindow2):
             
             return point, line,
         
-        self.animacion = animation.FuncAnimation(self.fig, actualizar_animacion, frames=t, interval=(50 if tipo == "TiroOblicuoA" or "TiroOblicuoB" else 1), 
-                                                cache_frame_data=False, save_count=0 ,repeat = False, blit = True)
+        self.animacion = animation.FuncAnimation(self.fig, actualizar_animacion, frames=t, interval=(50 if tipo == "TiroOblicuoA" or "TiroOblicuoB" else 1),
+                                                cache_frame_data=False, repeat = False, blit = True)
         
 
         self.bLimpiar.setEnabled(True)
